@@ -34,7 +34,11 @@ class _QrCodeState extends State<QrScreen>{
               colour: Colors.blueAccent[700],
               onPressed: _scan
             ),
+            
+        
         Text(_data),
+        
+        
       ],)
     );
   }
