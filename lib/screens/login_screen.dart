@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   email = value;
                 },
                 decoration:
-                    kTextFieldDecoration.copyWith(hintText: 'Kullanıcı Adı'),
+                    kTextFieldDecoration.copyWith(hintText: 'Email'),
               ),
               SizedBox(
                 height: 8.0,
