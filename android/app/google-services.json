@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "719996327222",
+    "project_id": "gtu-bike",
+    "storage_bucket": "gtu-bike.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719996327222:android:8ca48ba1a6c6d87043cf97",
+        "android_client_info": {
+          "package_name": "co.appbrewery.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "719996327222-lv29a7a609jtf9no4401oj9hirsmc5fo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuFLnP5yUXVa2DaWekAO_3gmSk-gFGEXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "719996327222-lv29a7a609jtf9no4401oj9hirsmc5fo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
