@@ -57,8 +57,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   ),
                 ),
                 AnimatedTextKit(
+                  //////////////////////////////////////////////////////////////////////
                   animatedTexts: [
-                    ScaleAnimatedText(
+                    FadeAnimatedText(
                       'GTÜ Bisiklet Kayıt Sistemi',
                       textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w900),
                     ),
