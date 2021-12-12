@@ -18,6 +18,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool showSpinner = false;
   String email;
   String password;
+  String name;
+  String surname;
+  String studentNumber;
+  String idNumber;
 
   DataBase database = new DataBase();
 
@@ -52,11 +56,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   email = value;
                 },
                 decoration:
-                    kTextFieldDecoration.copyWith(hintText: 'Kullanıcı Adı'),
+                    kTextFieldDecoration.copyWith(hintText: 'Email'),
               ),
               SizedBox(
                 height: 8.0,
               ),
+              //////////////////////////////////////////////////////////////////
               TextField(
                 obscureText: true,
                 textAlign: TextAlign.center,
@@ -67,7 +72,59 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     hintText: 'Şifre'),
               ),
               SizedBox(
-                height: 24.0,
+                height: 8.0,
+              ),
+              //////////////////////////////////////////////////////////////////
+              TextField(
+                obscureText: true,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  name = value;
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'İsim'),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              //////////////////////////////////////////////////////////////////
+              TextField(
+                obscureText: true,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  surname = value;
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Soyisim'),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              //////////////////////////////////////////////////////////////////
+              TextField(
+                obscureText: true,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  studentNumber = value;
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Öğrenci Numarası'),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              //////////////////////////////////////////////////////////////////
+              TextField(
+                obscureText: true,
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  idNumber = value;
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Kimlik Numarası'),
+              ),
+              SizedBox(
+                height: 8.0,
               ),
               RoundedButton(
                 title: 'Kaydol',
@@ -82,6 +139,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                     if (newUser != null) {
                       Map <String, String> kullaniciBilgileri = {     //Database'e eklenecek veriler
+
+                        "name":name,
+                        "surname":surname,
+                        "studentNumber":studentNumber,
+                        "idNumber":idNumber,
                         "email": email, 
                         "password": password,
                       };
