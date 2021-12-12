@@ -1,8 +1,10 @@
+import 'package:flash_chat/database/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class RegistrationScreen extends StatefulWidget {
@@ -16,6 +18,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool showSpinner = false;
   String email;
   String password;
+
+  DataBase database = new DataBase();
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +79,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   try {
                     final newUser = await _auth.createUserWithEmailAndPassword(
                         email: email, password: password);
+
                     if (newUser != null) {
+                      Map <String, String> kullaniciBilgileri = {     //Database'e eklenecek veriler
+                        "email": email, 
+                        "password": password,
+                      };
+
+                      database.addData(kullaniciBilgileri).then((result){
+                        Navigator.pop(context);
+                      });
+
+
                     //  Navigator.pushNamed(context, ChatScreen.id);
                     }
 
