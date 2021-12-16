@@ -51,7 +51,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               ////////////////////////////////////////////////////////////////////
               TextField(
-                obscureText: true,
+                
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   name = value;
@@ -64,7 +64,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               //////////////////////////////////////////////////////////////////
               TextField(
-                obscureText: true,
+                
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   surname = value;
@@ -103,7 +103,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               //////////////////////////////////////////////////////////////////
               TextField(
-                obscureText: true,
+                
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   studentNumber = value;
@@ -116,7 +116,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               //////////////////////////////////////////////////////////////////
               TextField(
-                obscureText: true,
+                
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   idNumber = value;
@@ -147,11 +147,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         "idNumber":idNumber,
                         "email": email, 
                         "password": password,
+                        "qrCode": "",
                       };
 
                       database.addData(kullaniciBilgileri).then((result){
                         Navigator.pop(context);
                       });
+                      
 
 
                     //  Navigator.pushNamed(context, ChatScreen.id);

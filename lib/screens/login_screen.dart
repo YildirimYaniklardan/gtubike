@@ -4,6 +4,8 @@ import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'qr_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -88,7 +90,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   } catch (e) {
                     print(e);
                   }
+/*
+                  FirebaseAuth auth = FirebaseAuth.instance;
+    
+                  User user = auth.currentUser;
+                  String uid = user.uid;
+    
+                  CollectionReference cf = FirebaseFirestore.instance.collection('kullanicilar');
+                  
+                  var documentID;
+                  var collection = FirebaseFirestore.instance.collection('kullanicilar');
 
+                  var querySnapshots = await collection.get();
+                  
+                  for (var snapshot in querySnapshots.docs) {
+                        if(snapshot.data().entries.last.toString().contains(user.email)){
+                          documentID = snapshot.id;                      
+                        }                              
+                  }
+
+                  
+                  debugPrint("AAAAAAAAAAAAA");
+                  debugPrint(documentID);
+                      
+                 */ 
                 },
               ),
             ],
