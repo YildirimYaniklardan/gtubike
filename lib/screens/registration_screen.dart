@@ -4,8 +4,6 @@ import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -148,6 +146,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         "email": email, 
                         "password": password,
                         "qrCode": "",
+                        "kiraTalebi": "yok",
+                        "kiraBaslangici":"",
+                        "kiraBitisTarihi":"",
                       };
 
                       database.addData(kullaniciBilgileri).then((result){

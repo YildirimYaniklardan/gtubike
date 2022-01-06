@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_date/dart_date.dart';
 
 update(String data) async {
 
@@ -11,8 +12,7 @@ update(String data) async {
     
     
     User user = auth.currentUser;
-    String uid = user.uid;
-    
+
     CollectionReference cf = FirebaseFirestore.instance.collection('kullanicilar');
     var documentID;
     var collection = FirebaseFirestore.instance.collection('kullanicilar');
@@ -26,14 +26,7 @@ update(String data) async {
     }
 
     cf.doc(documentID).update({'qrCode': data});
-    /*
-    var collection = FirebaseFirestore.instance.collection('kullanicilar');
-    var querySnapshots = await collection.get();
-    for (var doc in querySnapshots.docs) {
-    await doc.reference.update({
-      'qrCode': data,
-  });
-}*/
+
     
 }
 

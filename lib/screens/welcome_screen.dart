@@ -3,7 +3,7 @@ import 'login_screen.dart';
 import 'registration_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flash_chat/components/rounded_button.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:dart_date/dart_date.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -39,6 +39,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
+
+    var now = DateTime.now();
+    print(now.toString());
+    
     return Scaffold(
       backgroundColor: animation.value,
       body: Padding(
