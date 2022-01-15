@@ -1,7 +1,7 @@
-import 'package:flash_chat/database/database.dart';
+import 'package:gtu_bike/database/database.dart';
 import 'package:flutter/material.dart';
-import 'package:flash_chat/components/rounded_button.dart';
-import 'package:flash_chat/constants.dart';
+import 'package:gtu_bike/components/rounded_button.dart';
+import 'package:gtu_bike/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
@@ -20,6 +20,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String surname;
   String studentNumber;
   String idNumber;
+  String phoneNumber;
+  int rentCounter = 0;
 
   DataBase database = new DataBase();
 
@@ -125,6 +127,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               SizedBox(
                 height: 8.0,
               ),
+              //////////////////////////////////////////////////////////////////
+              TextField(
+                
+                textAlign: TextAlign.center,
+                onChanged: (value) {
+                  phoneNumber = value;
+                },
+                decoration: kTextFieldDecoration.copyWith(
+                    hintText: 'Telefon Numarası'),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              //////////////////////////////////////////////////////////////////
               RoundedButton(
                 title: 'Kaydol',
                 colour: Colors.blueAccent,
@@ -145,19 +161,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         "idNumber":idNumber,
                         "email": email, 
                         "password": password,
-                        "qrCode": "",
+                        "qrCode": "-",
+                        "kiralananBisikletSayisi": "0",
                         "kiraTalebi": "yok",
-                        "kiraBaslangici":"",
-                        "kiraBitisTarihi":"",
+                        "kiraBaslangici":"-",
+                        "kiraBitisTarihi":"-",
                       };
 
                       database.addData(kullaniciBilgileri).then((result){
                         Navigator.pop(context);
                       });
-                      
-
-
-                    //  Navigator.pushNamed(context, ChatScreen.id);
+                  
                     }
 
                     setState(() {

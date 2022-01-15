@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'registration_screen.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flash_chat/components/rounded_button.dart';
-import 'package:dart_date/dart_date.dart';
+import 'package:gtu_bike/components/rounded_button.dart';
+
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -20,7 +19,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   void initState() {
     super.initState();
-
+/*
     controller =
         AnimationController(duration: Duration(seconds: 1), vsync: this);
     animation = ColorTween(begin: Colors.blueGrey, end: Colors.white)
@@ -28,7 +27,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     controller.forward();
     controller.addListener(() {
       setState(() {});
-    });
+    });*/
   }
 
   @override
@@ -44,7 +43,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     print(now.toString());
     
     return Scaffold(
-      backgroundColor: animation.value,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -60,15 +58,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     height: 60.0,
                   ),
                 ),
-                AnimatedTextKit(
-                  animatedTexts: [
-                    FadeAnimatedText(
-                      'GTÜ Bisiklet Kayıt Sistemi',
-                      textStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w900),
-                    ),
-                    
-                  ],
-                ),
+                Text(
+                  'GTU Bisiklet Kiralama Sistemi',
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                )
               ],
             ),
             SizedBox(
