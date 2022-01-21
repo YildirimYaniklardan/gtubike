@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'login_screen.dart';
-import 'registration_screen.dart';
 import 'package:gtu_bike/components/rounded_button.dart';
+import 'package:gtu_bike/screens/contract_screen.dart';
 
 
 class WelcomeScreen extends StatefulWidget {
@@ -16,33 +17,23 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   AnimationController controller;
   Animation animation;
 
-  @override
-  void initState() {
-    super.initState();
-/*
-    controller =
-        AnimationController(duration: Duration(seconds: 1), vsync: this);
-    animation = ColorTween(begin: Colors.blueGrey, end: Colors.white)
-        .animate(controller);
-    controller.forward();
-    controller.addListener(() {
-      setState(() {});
-    });*/
-  }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
 
     var now = DateTime.now();
     print(now.toString());
+
+
+    return WillPopScope(
+      onWillPop: () async {
+        
+        SystemNavigator.pop();
+      return true;
+    },
     
-    return Scaffold(
+    child: Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -78,16 +69,19 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 Navigator.pushNamed(context, LoginScreen.id);
               },
             ),
+
+            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
             RoundedButton(
               title: 'Kaydol',
               colour: Colors.blueAccent[700],
               onPressed: () {
-                Navigator.pushNamed(context, RegistrationScreen.id);
+                Navigator.pushNamed(context, ContractScreen.id);
               },
             ),
           ],
         ),
       ),
+    ),
     );
   }
 }

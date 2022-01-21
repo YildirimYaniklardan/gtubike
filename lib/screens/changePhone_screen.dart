@@ -5,13 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gtu_bike/constants.dart';
 import 'package:gtu_bike/screens/qr_screen.dart';
 
-updatePass(String data) async {
+updatePhone(String data) async {
 
 
     FirebaseAuth auth = FirebaseAuth.instance;
 
-    User user = auth.currentUser; 
-    user.updatePassword(data);
+    User user = auth.currentUser;
 
 
     CollectionReference cf = FirebaseFirestore.instance.collection('kullanicilar');
@@ -26,19 +25,19 @@ updatePass(String data) async {
       }                              
     }
 
-    cf.doc(documentID).update({'password': data});
+    cf.doc(documentID).update({'phoneNumber': data});
     
 }
 
-class ChangePasswordScreen extends StatefulWidget{
-  static const String id = 'changePassword_screen';
+class ChangePhoneScreen extends StatefulWidget{
+  static const String id = 'changePhone_screen';
   @override
-  _ChangePasswordState createState() => _ChangePasswordState();
+  _ChangePhoneState createState() => _ChangePhoneState();
 }
 
-class _ChangePasswordState extends State<ChangePasswordScreen>{
+class _ChangePhoneState extends State<ChangePhoneScreen>{
   
-  String newPassword1, newPassword2;
+  String newPhone1, newPhone2;
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +58,10 @@ class _ChangePasswordState extends State<ChangePasswordScreen>{
         textAlign: TextAlign.center,
 
         onChanged: (value) {
-          newPassword1 = value;
+          newPhone1 = value;
         },
         decoration: kTextFieldDecoration.copyWith(
-            hintText: 'Yeni Şifre'),
+            hintText: 'Yeni Telefon Numarası'),
         ),
         SizedBox(
           height: 8.0,
@@ -73,28 +72,28 @@ class _ChangePasswordState extends State<ChangePasswordScreen>{
         textAlign: TextAlign.center,
 
         onChanged: (value) {
-          newPassword2 = value;
+          newPhone2 = value;
         },
         decoration: kTextFieldDecoration.copyWith(
-            hintText: 'Yeni Şifre'),
+            hintText: 'Yeni Telefon Numarası'),
         ),
         SizedBox(
           height: 8.0,
         ),
         Padding(padding: EdgeInsets.symmetric(vertical: 20)),
         RoundedButton(
-              title: 'Şifreyi Değiştir',
+              title: 'Telefon Numarasını Değiştir',
               
               //colour: Colors.lightBlueAccent,
               colour: Colors.blueAccent[700],
               onPressed: () {
-                if(newPassword1==newPassword2){
-                  updatePass(newPassword1);
+                if(newPhone1==newPhone2){
+                  updatePhone(newPhone1);
 
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      content: Text('Şifreniz değiştirildi.'),
+                      content: Text('Telefon numaranız değiştirildi.'),
                       actions: [
                         ElevatedButton(
                             onPressed: () {
@@ -112,7 +111,7 @@ class _ChangePasswordState extends State<ChangePasswordScreen>{
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text('HATA'),
-                      content: Text('Girdiğiniz şifreler aynı değil'),
+                      content: Text('Girdiğiniz numaralar aynı değil'),
                       actions: [
                         ElevatedButton(
                             onPressed: () {

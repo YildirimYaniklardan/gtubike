@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gtu_bike/components/rounded_button.dart';
 import 'package:gtu_bike/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gtu_bike/screens/welcome_screen.dart';
+import 'package:gtu_bike/screens/resetPassword_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'qr_screen.dart';
 
@@ -19,7 +21,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+    return WillPopScope(
+    onWillPop: () async {
+      Navigator.pushNamed(context, WelcomeScreen.id);
+      return true;
+    },
+
+    child: Scaffold(
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
@@ -80,44 +89,67 @@ class _LoginScreenState extends State<LoginScreen> {
                         email: email, password: password);
                     if (user != null) {
                       Navigator.pushNamed(context, QrScreen.id);
+                      setState(() {
+                        showSpinner = false;
+                      });
                     }
-
-                    setState(() {
-                      showSpinner = false;
-                    });
+                    
+                    
                   } catch (e) {
-                    print(e);
-                  }
-/*
-                  FirebaseAuth auth = FirebaseAuth.instance;
-    
-                  User user = auth.currentUser;
-                  String uid = user.uid;
-    
-                  CollectionReference cf = FirebaseFirestore.instance.collection('kullanicilar');
-                  
-                  var documentID;
-                  var collection = FirebaseFirestore.instance.collection('kullanicilar');
-
-                  var querySnapshots = await collection.get();
-                  
-                  for (var snapshot in querySnapshots.docs) {
-                        if(snapshot.data().entries.last.toString().contains(user.email)){
-                          documentID = snapshot.id;                      
-                        }                              
+                    showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('HATA'),
+                      content: Text('Kullanıcı adı veya şifre hatalı.'),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Geri'))
+                      ],
+                    ),
+                  );
+                  setState(() {
+                        showSpinner = false;
+                      });
                   }
 
-                  
-                  debugPrint("AAAAAAAAAAAAA");
-                  debugPrint(documentID);
-                      
-                 */ 
+                },
+              ),
+
+
+              RoundedButton(
+                title: 'Şifremi Unuttum',
+                colour: Colors.lightBlueAccent,
+                onPressed: () async {
+
+                  Navigator.pushNamed(context, ResetPasswordScreen.id);
+                  /*
+                  try{   burası şifre yenileme sayfasına gelecek.
+                    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.orangeAccent,
+                      content: Text(
+                        "Şifre Yenileme Email'i Yollandı",
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ));
+                  }
+                  catch(e){}*/
+
                 },
               ),
             ],
           ),
         ),
       ),
+    ),
     );
+    
   }
 }
+
+
+
+

@@ -1,17 +1,23 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:gtu_bike/components/rounded_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:gtu_bike/screens/welcome_screen.dart';
+import 'package:mailer/smtp_server.dart';
 import 'changePassword_screen.dart';
+import 'Login_screen.dart';
+import 'package:gtu_bike/screens/changePhone_screen.dart';
+import 'package:mailer/mailer.dart';
+import 'package:gtu_bike/api/google_auth_api.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-String rentalStartDate = "";
-String rentalFinshDate = "";
+String rentalStartDate = "---";
+String rentalFinshDate = "---";
 String bikeCounter = "";
-
+String gecikmeMesaji = "Kiralamış olduğunuz bisikletin teslim tarihi geçmiştir. En kısa sürede bisikleti teslim etmeniz gerekmektedir.";
+String username = 'gtubike3@gmail.com';
+String password = '2021plus.';
+bool mailGonderildiMi = false;
 
 update(String data) async {
 
@@ -35,41 +41,49 @@ update(String data) async {
 
 }
 
-getRentalDate(String a)  async {
+Future sendEmail() async{
 
-    FirebaseAuth auth = FirebaseAuth.instance;
-    Map<String, dynamic> data;
+  final smtpServer = gmail(username, password);
+  FirebaseAuth auth = FirebaseAuth.instance;
+
     User user = auth.currentUser;
 
-    CollectionReference cf = FirebaseFirestore.instance.collection('kullanicilar');
-    var documentID;
-    var collection = FirebaseFirestore.instance.collection('kullanicilar');
-    
-    var querySnapshots = await collection.get();
-                  
-    for (var snapshot in querySnapshots.docs) {
-      if(snapshot.data().entries.last.toString().contains(user.email)){
-        documentID = snapshot.id;
-         
-        data = snapshot.data() as Map<String, dynamic>;   
-        a = data['kiraBaslangici']; 
-                        
-      }                              
+  final message = Message()
+    ..from = Address(username, 'GTÜ Bisiklet Yönetim Sistemi')
+    ..recipients.add(user.email)
+    ..subject = 'GTU Bisiklet Kiralama Gecikme Bildirimi'
+    ..text = gecikmeMesaji;
+  
+  try {
+    final sendReport = await send(message, smtpServer);
+    print('Message sent: ' + sendReport.toString());
+  } on MailerException catch (e) {
+    print('Message not sent.');
+    for (var p in e.problems) {
+      print('Problem: ${p.code}: ${p.msg}');
     }
+  }
 
-    cf.doc(documentID).update({'qrCode': data});
-
-    
-    
-    print("YYYYYYYYYYYYYYY"); 
-    print(a); 
-    print("YYYYYYYYYYYYYYY"); 
-
-    return data;
-    //cf.doc(documentID).get().then((value) => snap);
-    
 }
 
+getData() async{
+
+    String _mail = (await FirebaseAuth.instance.currentUser.email);
+
+    return await FirebaseFirestore.instance
+    .collection('kullanicilar')
+    .get()
+    .then((QuerySnapshot querySnapshot) {
+        querySnapshot.docs.forEach((doc) {
+          
+          if(_mail == doc["email"]){
+            rentalStartDate = doc["kiraBaslangici"];
+            rentalFinshDate = doc["kiraBitisTarihi"];
+            bikeCounter = doc["kiralananBisikletSayisi"];
+          }
+        });    
+    });
+}
 
 class QrScreen extends StatefulWidget{
   static const String id = 'qr_screen';
@@ -79,61 +93,98 @@ class QrScreen extends StatefulWidget{
 
 
 class _QrCodeState extends State<QrScreen>{
+
+  final Future<String> _calculation = Future<String>.delayed(
+    const Duration(seconds: 2),
+    () => 'Data Loaded');
+    
+
   String _data="";
   Map<String, dynamic> data;
   String a;
-  
-
+  bool showSpinner = false;
   
   
   _scan() async{
-
     await FlutterBarcodeScanner.scanBarcode("#000000", "Cancel", true, ScanMode.BARCODE).then((value) => setState(()=>_data = value));
     update(_data);
   }
   
+  
   @override
   
   Widget build(BuildContext context){
+    
+    DateTime timeBackPressed = DateTime.now();
+   /* 
+    FutureBuilder(
+      builder: (BuildContext context, AsyncSnapshot snapshot){},
+      future: getData(),
+    );*/
 
     
 
+    FutureBuilder(
+                future: getData(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if(snapshot.hasData){
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }else{
+                   return Center( // here only return is missing
+                      child: Text(snapshot.data['email'])
+                    );
+                  }
+                }else if (snapshot.hasError){
+                  Text('no data');
+                }
+                  return CircularProgressIndicator();
+                },
+              );
 
-    String documentID;
-    FirebaseAuth auth = FirebaseAuth.instance;
-    Map<String, dynamic> data;
-    User user = auth.currentUser;
-    TextEditingController _controller = new TextEditingController();
-    
-    FirebaseFirestore.instance
-    .collection('kullanicilar')
-    .get()
-    .then((QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          
-          if(user.email == doc["email"]){
-            rentalStartDate = doc["kiraBaslangici"];
-            rentalFinshDate = doc["kiraBitisTarihi"];
-            bikeCounter = doc["kiralananBisikletSayisi"];
-            print("DOCUMENT ID BURADA : " + documentID);
-            rentalStartDate=documentID;
-          }
-        });    
-    });
-
-    print("WWWWWWWWWWWWWWWWWWWWWWWWW");
-    print("DOCUMENT ID 2 BURADA : ");
+    getData();
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     print(rentalStartDate);
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
-    
-    
-    
-    return Scaffold(
+  //getData();
+/*
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAA   ");
+    print(rentalStartDate.substring(0,2));
+    print("   AAAAAAAAAAAAAAAAAAAAAAAAAA");
 
+    if(rentalStartDate != null && rentalFinshDate!= null && rentalStartDate != "---"  && rentalFinshDate != "---" ){
+      if(mailGonderildiMi == false && rentalStartDate.substring(0,1) == rentalFinshDate.substring(0,1) && rentalStartDate.substring(1,2) == rentalFinshDate.substring(1,2)){
+      sendEmail();
+      mailGonderildiMi = true;
+      }
+    }
+    */
+    //sendEmail();
+    
+    
+    return WillPopScope(
       
-      
-      
-      body: Padding(
+    onWillPop: () async {
+      final difference =DateTime.now().difference(timeBackPressed);
+      final isExitWarning = difference >= Duration(seconds: 2);
+      timeBackPressed = DateTime.now();
+
+      if(isExitWarning){
+        return false;
+      }
+      else{
+        return true;
+      }
+    },
+    
+    
+    child: Scaffold(
+      body: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.0,vertical: 50),
         child:Column(
         
@@ -142,7 +193,8 @@ class _QrCodeState extends State<QrScreen>{
       crossAxisAlignment: CrossAxisAlignment.stretch,
   
       children: [
-        Padding(padding: EdgeInsets.symmetric(vertical: 10)),
+        
+        Padding(padding: EdgeInsets.symmetric(vertical: 2)),
         Text(
           'Şimdiye Kadar Kiralanan Bisiklet Sayısı ',   
           textAlign: TextAlign.center,
@@ -151,6 +203,7 @@ class _QrCodeState extends State<QrScreen>{
         ),
         Text(
           bikeCounter,      
+          
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
@@ -175,12 +228,14 @@ class _QrCodeState extends State<QrScreen>{
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
         Text(
+          
           rentalFinshDate,      
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
 
+        Padding(padding: EdgeInsets.symmetric(vertical: 10)),
         
         RoundedButton(
               title: 'BİSİKLET KİRALA',
@@ -198,11 +253,21 @@ class _QrCodeState extends State<QrScreen>{
         ),
 
         RoundedButton(
+              title: 'TELEFON NUMARASI DEĞİŞİKLİĞİ',
+              colour: Colors.blueAccent[700],
+
+              onPressed: () {
+                Navigator.pushNamed(context, ChangePhoneScreen.id);
+              },  
+        ),
+
+        RoundedButton(
               title: 'ÇIKIŞ',
               colour: Colors.blueAccent[700],
 
               onPressed: () {
-                Navigator.pushNamed(context, WelcomeScreen.id);
+                FirebaseAuth.instance.signOut();
+                Navigator.pushNamed(context, LoginScreen.id);
               },  
         ),
 
@@ -210,6 +275,8 @@ class _QrCodeState extends State<QrScreen>{
         
         
       ],)
+    ),
+      )
     ),
     );
   }

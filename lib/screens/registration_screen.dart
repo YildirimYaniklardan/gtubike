@@ -4,8 +4,12 @@ import 'package:gtu_bike/components/rounded_button.dart';
 import 'package:gtu_bike/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:gtu_bike/screens/login_screen.dart';
+
+
 
 class RegistrationScreen extends StatefulWidget {
+  
   static const String id = 'registration_screen';
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
@@ -13,6 +17,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
+  bool value = false;
   bool showSpinner = false;
   String email;
   String password;
@@ -21,22 +26,28 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String studentNumber;
   String idNumber;
   String phoneNumber;
-  int rentCounter = 0;
+  String personelOgrenci = "Öğrenci";
 
   DataBase database = new DataBase();
 
   @override
   Widget build(BuildContext context) {
+
+    Map <String, String> kullaniciBilgileri;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
+        
         inAsyncCall: showSpinner,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
+            
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              Expanded(child: SingleChildScrollView()),
               Flexible(
                 child: Hero(
                   tag: 'logo',
@@ -141,6 +152,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: 8.0,
               ),
               //////////////////////////////////////////////////////////////////
+              Text(
+                          'Personelseniz Aşağıdaki Kutuyu İşaretleyin',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 17.0),
+                        ), //Text
+              Checkbox(
+                          
+                          value: value,
+                          onChanged: (value) {
+                            setState(() {
+                              this.value = value;
+                            });
+                            if (value == true){
+                              personelOgrenci = "Personel";
+                            }
+                            else{personelOgrenci = "Öğrenci";}
+                          },
+                        ), //Checkbox
               RoundedButton(
                 title: 'Kaydol',
                 colour: Colors.blueAccent,
@@ -153,7 +182,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         email: email, password: password);
 
                     if (newUser != null) {
-                      Map <String, String> kullaniciBilgileri = {     //Database'e eklenecek veriler
+                      kullaniciBilgileri = {     //Database'e eklenecek veriler
 
                         "name":name,
                         "surname":surname,
@@ -161,24 +190,86 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         "idNumber":idNumber,
                         "email": email, 
                         "password": password,
-                        "qrCode": "-",
+                        "phoneNumber": phoneNumber,
+                        "ogrenciMiPersonelMi": personelOgrenci,
+                        "qrCode": "-1",
                         "kiralananBisikletSayisi": "0",
                         "kiraTalebi": "yok",
                         "kiraBaslangici":"-",
                         "kiraBitisTarihi":"-",
-                      };
-
-                      database.addData(kullaniciBilgileri).then((result){
-                        Navigator.pop(context);
-                      });
+                        "not": "-",
+                        "bisikletVarmi":"yok",      
+                        "karalistedeMi":"hayır",               
+                      };                                 
                   
                     }
+                    
 
-                    setState(() {
+                  if(name != null && surname != null && studentNumber != null && idNumber != null && email != null && password != null && phoneNumber != null){
+                    database.addData(kullaniciBilgileri, email).then((result){
+                        Navigator.pushNamed(context, LoginScreen.id);
+                      });
+                  }
+                  else{
+                    showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('HATA'),
+                      content: Text('Bütün alanlar doldurulmalı.'),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Geri'))
+                      ],
+                    ),
+                  );
+                  setState(() {
                       showSpinner = false;
                     });
+                  }
+                    
+
+                    
                   } catch (e) {
-                    print(e);
+                    if(name == null || surname == null || studentNumber == null || idNumber == null || email == null || password == null || phoneNumber == null){
+                      showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('HATA'),
+                      content: Text('Bütün alanlar doldurulmalı.'),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Geri'))
+                      ],
+                    ),
+                  );
+                    }
+
+                    else{
+                      showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('HATA'),
+                      content: Text('Hatalı Giriş.'),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('Geri'))
+                      ],
+                    ),
+                  );
+                    }
+                    
+                  setState(() {
+                      showSpinner = false;
+                    });
                   }
                 },
               ),

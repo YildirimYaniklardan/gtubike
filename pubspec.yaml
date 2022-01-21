@@ -20,6 +20,8 @@ dependencies:
   fluttertoast: ^8.0.8
   dart_date: ^1.1.0
   rflutter_alert: ^2.0.4
+  mailer: ^5.0.2
+  google_sign_in: ^5.2.3
 
 dev_dependencies:
   flutter_test:

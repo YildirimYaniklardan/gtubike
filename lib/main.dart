@@ -1,9 +1,12 @@
 import 'package:gtu_bike/screens/changePassword_screen.dart';
+import 'package:gtu_bike/screens/changePhone_screen.dart';
 import 'package:gtu_bike/screens/qr_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gtu_bike/screens/welcome_screen.dart';
 import 'package:gtu_bike/screens/login_screen.dart';
+import 'package:gtu_bike/screens/resetPassword_screen.dart';
 import 'package:gtu_bike/screens/registration_screen.dart';
+import 'package:gtu_bike/screens/contract_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 //import 'package:gtu_bike/screens/chat_screen.dart';
@@ -27,6 +30,9 @@ class FlashChat extends StatelessWidget {
         RegistrationScreen.id: (context) => RegistrationScreen(),
         QrScreen.id: (context) => QrScreen(),
         ChangePasswordScreen.id: (context) => ChangePasswordScreen(),
+        ChangePhoneScreen.id: (context) => ChangePhoneScreen(),
+        ContractScreen.id: (context) => ContractScreen(),
+        ResetPasswordScreen.id: (context) => ResetPasswordScreen(),
       },
     );
   }
