@@ -8,7 +8,6 @@ import 'changePassword_screen.dart';
 import 'Login_screen.dart';
 import 'package:gtu_bike/screens/changePhone_screen.dart';
 import 'package:mailer/mailer.dart';
-import 'package:gtu_bike/api/google_auth_api.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 String rentalStartDate = "---";
@@ -38,6 +37,28 @@ update(String data) async {
     }
 
     cf.doc(documentID).update({'qrCode': data});
+
+}
+
+updateRequest() async {
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    User user = auth.currentUser;
+
+    CollectionReference cf = FirebaseFirestore.instance.collection('kullanicilar');
+    var documentID;
+    var collection = FirebaseFirestore.instance.collection('kullanicilar');
+    
+    var querySnapshots = await collection.get();
+                  
+    for (var snapshot in querySnapshots.docs) {
+      if(snapshot.data().entries.last.toString().contains(user.email)){
+        documentID = snapshot.id;                      
+      }                              
+    }
+
+    cf.doc(documentID).update({'kiraTalebi': 'var'});
 
 }
 
@@ -108,6 +129,7 @@ class _QrCodeState extends State<QrScreen>{
   _scan() async{
     await FlutterBarcodeScanner.scanBarcode("#000000", "Cancel", true, ScanMode.BARCODE).then((value) => setState(()=>_data = value));
     update(_data);
+    updateRequest();
   }
   
   
